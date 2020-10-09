@@ -5,6 +5,6 @@ Python API Reference
     :imported-members:
     :members:
     :undoc-members:
-    :special-members:
+    :special-members: __init__
     :inherited-members:
 
