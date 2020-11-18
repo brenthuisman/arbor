@@ -1,9 +1,5 @@
 name: WSL + GCC
 
-defaults:
-    run:
-        shell: wsl-bash {0}
-
 on:
   push:
     branches: [ master, ci_wsl ]
