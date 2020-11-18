@@ -1,9 +1,5 @@
 name: WSL + GCC
 
-defaults:
-    run:
-        shell: wsl-bash {0}
-
 on:
   push:
     branches: [ master, ci_wsl ]
@@ -19,8 +15,11 @@ jobs:
         os:    ["windows-latest"]
         gcc:   ["8", "10"]
         py:    ["3.7"]
-        cmake: ["3.18.x"]
+        cmake: ["3.18"]
         mpi:   ["OFF"]
+    defaults:
+      run:
+        shell: wsl-bash {0}
     steps:
       - name: Setup WSL
         uses: Vampire/setup-wsl@v1.0.1
@@ -34,3 +33,41 @@ jobs:
           cmake-version: ${{ matrix.cmake }}
       - name: whatcmake
         run: which cmake
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.py }}
+      - name: whatpy
+        run: which python3
+      - if: ${{ matrix.mpi == 'ON' }}
+        name: Install OpenMPI
+        run: |
+           export CC=gcc-${{ matrix.gcc }}
+           export CXX=g++-${{ matrix.gcc }}
+           wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.2.tar.gz
+           tar -xvf ./openmpi-4.0.2.tar.gz
+           cd openmpi-4.0.2
+           ./configure
+           make -j
+           sudo make install
+           sudo ldconfig
+           sudo python${{ matrix.py }} -mpip install mpi4py
+           cd -
+      - name: "Clone w/ submodules"
+        uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+      - name: Install arbor
+        run: |
+          pwd
+          ls -l
+          mkdir build
+          cmake -S . -B build -DCMAKE_CXX_COMPILER=g++-${{ matrix.gcc }} -DCMAKE_C_COMPILER=gcc-${{ matrix.gcc }} -DARB_WITH_PYTHON=ON -DPYTHON_EXECUTABLE=`which python${{ matrix.py }}` -DARB_WITH_MPI=${{ matrix.mpi }}
+          make -C build tests examples
+          sudo make -C build install
+      - name: "Run unit tests"
+        run: build/bin/unit
+      - name: "Run python tests"
+        run: PYTHONPATH="/usr/local/lib/python${{ matrix.py }}/site-packages/:${PYTHONPATH}" python${{ matrix.py }} python/test/unit/runner.py
+      - name: "Run python+MPI tests"
+        run: PYTHONPATH="/usr/local/lib/python${{ matrix.py }}/site-packages/:${PYTHONPATH}" python${{ matrix.py }} python/test/unit_distributed/runner.py
