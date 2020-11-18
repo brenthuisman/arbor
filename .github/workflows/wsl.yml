@@ -22,6 +22,8 @@ jobs:
         cmake: ["3.18.x"]
         mpi:   ["OFF"]
     steps:
+      - name: Chell
+        run: echo $TERM
       - name: Setup WSL
         uses: Vampire/setup-wsl@v1.0.1
         with:
