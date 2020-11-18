@@ -25,12 +25,9 @@ jobs:
         uses: Vampire/setup-wsl@v1.0.1
         with:
           distribution: 'Ubuntu-20.04'
-      - name: whatterm
-        run: echo $TERM
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v1.4
-        with:
-          cmake-version: ${{ matrix.cmake }}
+          additional-packages: python3 python3-pip
+      - name: pipcmake
+        run: pip3 install cmake==${{ matrix.cmake }} --user
       - name: whatcmake
         run: which cmake
       - name: Set up Python
