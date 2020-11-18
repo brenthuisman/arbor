@@ -27,7 +27,7 @@ jobs:
           distribution: 'Ubuntu-20.04'
           additional-packages: python3 python3-pip
       - name: pipcmake
-        run: pip3 install cmake==${{ matrix.cmake }} --user
+        run: pip3 install cmake==${{ matrix.cmake }}
       - name: whatcmake
         run: which cmake
       - name: Set up Python
