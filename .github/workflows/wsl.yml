@@ -1,5 +1,9 @@
 name: WSL + GCC
 
+defaults:
+    run:
+        shell: wsl-bash {0}
+
 on:
   push:
     branches: [ master, ci_wsl ]
@@ -18,12 +22,12 @@ jobs:
         cmake: ["3.18.x"]
         mpi:   ["OFF"]
     steps:
-      - name: Chell
-        run: echo $TERM
       - name: Setup WSL
         uses: Vampire/setup-wsl@v1.0.1
         with:
           distribution: 'Ubuntu-20.04'
+      - name: Chell
+        run: echo $TERM
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.4
         with:
