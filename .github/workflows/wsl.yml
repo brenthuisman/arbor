@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os:    ["windows-latest"]
-        gcc:   ["8", "10"]
+        gcc:   ["10"]
         py:    ["3.7"]
         cmake: ["3.18"]
         mpi:   ["OFF"]
