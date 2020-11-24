@@ -28,10 +28,12 @@ jobs:
           additional-packages: python3 python3-pip build-essential gcc-${{ matrix.gcc }}
       - name: pipcmake
         run: pip3 install cmake==${{ matrix.cmake }}
-      - name: whatcmake
-        run: which cmake
-      - name: whatpy
-        run: which python3
+      - name: Check versions
+        run: |
+          python${{ matrix.py }} --version
+          cmake --version
+          gcc-${{ matrix.gcc }} --version
+          g++-${{ matrix.gcc }} --version
       - if: ${{ matrix.mpi == 'ON' }}
         name: Install OpenMPI
         run: |
@@ -55,12 +57,13 @@ jobs:
           pwd
           ls -l
           mkdir build
-          cmake -S . -B build -DCMAKE_CXX_COMPILER=g++-${{ matrix.gcc }} -DCMAKE_C_COMPILER=gcc-${{ matrix.gcc }} -DARB_WITH_PYTHON=ON -DPYTHON_EXECUTABLE=`which python${{ matrix.py }}` -DARB_WITH_MPI=${{ matrix.mpi }}
+          cmake -S . -B build -DCMAKE_CXX_COMPILER=/usr/bin/g++-${{ matrix.gcc }} -DCMAKE_C_COMPILER=/usr/bin/gcc-${{ matrix.gcc }} -DARB_WITH_PYTHON=ON -DPYTHON_EXECUTABLE=`which python${{ matrix.py }}` -DARB_WITH_MPI=${{ matrix.mpi }}
           make -C build tests examples
           sudo make -C build install
       - name: "Run unit tests"
         run: build/bin/unit
       - name: "Run python tests"
         run: PYTHONPATH="/usr/local/lib/python${{ matrix.py }}/site-packages/:${PYTHONPATH}" python${{ matrix.py }} python/test/unit/runner.py
-      - name: "Run python+MPI tests"
+      - if: ${{ matrix.mpi == 'ON' }}
+        name: "Run python+MPI tests"
         run: PYTHONPATH="/usr/local/lib/python${{ matrix.py }}/site-packages/:${PYTHONPATH}" python${{ matrix.py }} python/test/unit_distributed/runner.py
