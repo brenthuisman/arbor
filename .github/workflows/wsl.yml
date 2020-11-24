@@ -25,7 +25,7 @@ jobs:
         uses: Vampire/setup-wsl@v1.0.1
         with:
           distribution: 'Ubuntu-20.04'
-          additional-packages: python3 python3-pip build-essential gcc-${{ matrix.gcc }}
+          additional-packages: python3 python3-pip build-essential gcc-${{ matrix.gcc }} g++-${{ matrix.gcc }}
       - name: pipcmake
         run: pip3 install cmake==${{ matrix.cmake }}
       - name: Check versions
