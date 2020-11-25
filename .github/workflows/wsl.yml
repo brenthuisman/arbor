@@ -30,6 +30,7 @@ jobs:
         run: pip3 install cmake==${{ matrix.cmake }}
       - name: Check versions
         run: |
+          bash
           python3 --version
           cmake --version
           gcc --version
@@ -54,6 +55,7 @@ jobs:
           submodules: "recursive"
       - name: Install arbor
         run: |
+          bash
           pwd
           ls -l
           mkdir build
