@@ -70,3 +70,12 @@ Cable cells
     properties of an ionic species.
 
 .. _pycablecell-probes:
+
+.. toctree::
+   :maxdepth: 1
+
+   morphology
+   labels
+   mechanisms
+   decor
+   probe_sample

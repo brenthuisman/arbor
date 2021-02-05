@@ -66,24 +66,3 @@ of the model over the locally available computational resources.
 
 In order to visualize the result of detected spikes a spike recorder can be used, and to analyse Arbor's performance a
 meter manager is available.
-
-.. toctree::
-   :maxdepth: 2
-   :caption: From recipe to simulation:
-
-   recipe
-   cell
-   interconnectivity
-   hardware
-   domdec
-   simulation
-
-.. toctree::
-   :maxdepth: 2
-   :caption: The cable cell:
-
-   cable_cell
-   morphology
-   labels
-   mechanisms
-   decor
